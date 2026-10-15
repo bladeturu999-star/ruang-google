@@ -260,11 +260,11 @@ function useThemeName(): 'dark' | 'light' {
 function Lighting({ theme }: { theme: 'dark' | 'light' }) {
   const day = theme === 'light'
   return <>
-    <color attach="background" args={[day ? '#bfe0ef' : '#1a2335']}/>
-    <fog attach="fog" args={[day ? '#bfe0ef' : '#1a2335', 38, 75]}/>
-    <hemisphereLight args={[day ? '#fff4e0' : '#7f95bd', day ? '#5d7a4c' : '#1e2620', day ? 1.1 : 0.32]}/>
-    <directionalLight position={[10, 16, 9]} intensity={day ? 2.4 : 0.75} color={day ? '#fff1d6' : '#ff9a5a'} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0004} shadow-camera-left={-16} shadow-camera-right={16} shadow-camera-top={16} shadow-camera-bottom={-16} shadow-camera-far={60}/>
-    <ambientLight intensity={day ? 0.35 : 0.14} color={day ? '#ffffff' : '#8fa4d8'}/>
+    <color attach="background" args={[day ? '#bfe0ef' : '#19202e']}/>
+    <fog attach="fog" args={[day ? '#bfe0ef' : '#19202e', 40, 80]}/>
+    <hemisphereLight args={[day ? '#ffffff' : '#7f95bd', day ? '#6d9a5c' : '#1e2620', day ? 1.15 : 0.32]}/>
+    <directionalLight position={[10, 16, 9]} intensity={day ? 2.6 : 0.75} color={day ? '#fff7e6' : '#ff9a5a'} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0004} shadow-camera-left={-16} shadow-camera-right={16} shadow-camera-top={16} shadow-camera-bottom={-16} shadow-camera-far={60}/>
+    <ambientLight intensity={day ? 0.42 : 0.14} color={day ? '#ffffff' : '#8fa4d8'}/>
   </>
 }
 

@@ -34,11 +34,14 @@ function random(seed: number) {
   }
 }
 
-/** Warm parquet planks (like the reference office floor). */
+/**
+ * Light Scandinavian plywood — the clean, pale floor of a modern tech office (Googleplex lobby
+ * feel). Very light oak planks with a faint grain.
+ */
 export function woodFloor(repeat: [number, number]) {
   return canvasTexture(`wood-${repeat.join('x')}`, 512, 512, (ctx) => {
     const rand = random(7)
-    const tones = ['#b98355', '#a9744a', '#c48f5f', '#b07b4f', '#9f6c43']
+    const tones = ['#e4cdb0', '#dbc2a4', '#e2c6a4', '#d9bd9c', '#d5b896']
     const plankH = 64
     for (let row = 0; row < 512 / plankH; row += 1) {
       let x = row % 2 === 0 ? 0 : -96
@@ -46,27 +49,28 @@ export function woodFloor(repeat: [number, number]) {
         const width = 128 + Math.floor(rand() * 96)
         ctx.fillStyle = tones[Math.floor(rand() * tones.length)]
         ctx.fillRect(x, row * plankH, width, plankH)
-        ctx.strokeStyle = 'rgba(60,35,20,0.18)'
-        for (let grain = 0; grain < 5; grain += 1) {
-          const y = row * plankH + 8 + rand() * (plankH - 16)
-          ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.bezierCurveTo(x + width / 3, y + 3, x + (2 * width) / 3, y - 3, x + width - 4, y); ctx.stroke()
+        ctx.strokeStyle = 'rgba(120,80,40,0.12)'
+        for (let grain = 0; grain < 4; grain += 1) {
+          const y = row * plankH + 10 + rand() * (plankH - 20)
+          ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.bezierCurveTo(x + width / 3, y + 2, x + (2 * width) / 3, y - 2, x + width - 4, y); ctx.stroke()
         }
-        ctx.fillStyle = 'rgba(50,28,15,0.55)'
+        ctx.fillStyle = 'rgba(120,80,40,0.3)'
         ctx.fillRect(x, row * plankH, 2, plankH)
         x += width
       }
-      ctx.fillStyle = 'rgba(50,28,15,0.5)'
+      ctx.fillStyle = 'rgba(120,80,40,0.28)'
       ctx.fillRect(0, row * plankH, 512, 2)
     }
   }, repeat)
 }
 
-/** Light ceramic tiles for the pantry. */
+/** Large-format polished light-grey porcelain tile — modern corridor/entrance floor. */
 export function tileFloor(repeat: [number, number]) {
   return canvasTexture(`tile-${repeat.join('x')}`, 256, 256, (ctx) => {
-    ctx.fillStyle = '#e9e4da'; ctx.fillRect(0, 0, 256, 256)
-    ctx.fillStyle = '#d6cfc2'
-    for (let i = 0; i <= 256; i += 64) { ctx.fillRect(i - 1, 0, 2, 256); ctx.fillRect(0, i - 1, 256, 2) }
+    ctx.fillStyle = '#eef2f6'; ctx.fillRect(0, 0, 256, 256)
+    ctx.strokeStyle = 'rgba(150,165,180,0.7)'
+    ctx.lineWidth = 2
+    for (let i = 0; i <= 256; i += 128) { ctx.strokeRect(i, 0, 128, 128); ctx.strokeRect(i, 128, 128, 256 - 128) }
   }, repeat)
 }
 
@@ -74,44 +78,50 @@ export function carpet(color: string, repeat: [number, number]) {
   return canvasTexture(`carpet-${color}-${repeat.join('x')}`, 128, 128, (ctx) => {
     const rand = random(11)
     ctx.fillStyle = color; ctx.fillRect(0, 0, 128, 128)
-    for (let i = 0; i < 900; i += 1) { ctx.fillStyle = `rgba(0,0,0,${rand() * 0.08})`; ctx.fillRect(rand() * 128, rand() * 128, 1, 1) }
+    for (let i = 0; i < 700; i += 1) { ctx.fillStyle = `rgba(0,0,0,${rand() * 0.06})`; ctx.fillRect(rand() * 128, rand() * 128, 1, 1) }
   }, repeat)
 }
 
+/** Freshly mown, bright lawn — the garden of a modern Googleplex campus. */
 export function grass(repeat: [number, number]) {
   return canvasTexture(`grass-${repeat.join('x')}`, 256, 256, (ctx) => {
     const rand = random(3)
-    ctx.fillStyle = '#5d8f4e'; ctx.fillRect(0, 0, 256, 256)
-    for (let i = 0; i < 2600; i += 1) {
-      const shade = 70 + Math.floor(rand() * 60)
-      ctx.fillStyle = `rgb(${shade - 25},${shade + 55},${shade - 30})`
+    ctx.fillStyle = '#6cb355'; ctx.fillRect(0, 0, 256, 256)
+    for (let i = 0; i < 3200; i += 1) {
+      const shade = 80 + Math.floor(rand() * 70)
+      ctx.fillStyle = `rgb(${shade - 25},${Math.min(235, shade + 65)},${shade - 40})`
       ctx.fillRect(rand() * 256, rand() * 256, 2, 3)
     }
+    // The mowing stripes every other block.
+    ctx.fillStyle = 'rgba(40,110,30,0.10)'
+    for (let i = 0; i < 4; i += 1) ctx.fillRect(i * 128, 0, 64, 256)
   }, repeat)
 }
 
+/** Smooth warm-grey asphalt with a clean centre line. */
 export function asphalt(repeat: [number, number]) {
   return canvasTexture(`asphalt-${repeat.join('x')}`, 256, 256, (ctx) => {
     const rand = random(5)
-    ctx.fillStyle = '#3d4044'; ctx.fillRect(0, 0, 256, 256)
-    for (let i = 0; i < 3000; i += 1) { const g = 50 + Math.floor(rand() * 40); ctx.fillStyle = `rgb(${g},${g},${g + 4})`; ctx.fillRect(rand() * 256, rand() * 256, 1.5, 1.5) }
+    ctx.fillStyle = '#4a4f54'; ctx.fillRect(0, 0, 256, 256)
+    for (let i = 0; i < 2600; i += 1) { const g = 66 + Math.floor(rand() * 34); ctx.fillStyle = `rgb(${g},${g},${g + 4})`; ctx.fillRect(rand() * 256, rand() * 256, 1.5, 1.5) }
     ctx.fillStyle = '#e8dfa0'
-    ctx.fillRect(0, 124, 110, 8); ctx.fillRect(146, 124, 110, 8)
+    ctx.fillRect(0, 121, 256, 14)
   }, repeat)
 }
 
+/** Smooth charcoal-grey paving slabs for the modern plaza. */
 export function pavingStones(repeat: [number, number]) {
   return canvasTexture(`paving-${repeat.join('x')}`, 256, 256, (ctx) => {
-    ctx.fillStyle = '#b8b2a6'; ctx.fillRect(0, 0, 256, 256)
-    ctx.fillStyle = '#a19b8f'
-    for (let y = 0; y < 256; y += 32) {
-      ctx.fillRect(0, y, 256, 2)
-      for (let x = (y / 32) % 2 === 0 ? 0 : 32; x < 256; x += 64) ctx.fillRect(x, y, 2, 32)
+    ctx.fillStyle = '#d7dbe0'; ctx.fillRect(0, 0, 256, 256)
+    ctx.strokeStyle = 'rgba(120,130,140,0.5)'
+    ctx.lineWidth = 2
+    for (let y = 0; y < 256; y += 64) {
+      for (let x = (y / 64) % 2 === 0 ? 0 : 32; x < 256; x += 64) ctx.strokeRect(x, y, 32, 64)
     }
   }, repeat)
 }
 
-/** Painted street-food sign: bold text on a coloured board. */
+/** Painted brand sign: bold text on a coloured board. */
 export function signTexture(text: string, background: string, foreground: string, subtitle?: string) {
   return canvasTexture(`sign-${text}-${background}-${subtitle ?? ''}`, 512, 160, (ctx) => {
     ctx.fillStyle = background; ctx.fillRect(0, 0, 512, 160)
@@ -129,6 +139,33 @@ export function merahPutih() {
   return canvasTexture('merah-putih', 96, 64, (ctx) => {
     ctx.fillStyle = '#ce1126'; ctx.fillRect(0, 0, 96, 32)
     ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 32, 96, 32)
+  })
+}
+
+/** The multicoloured Google "G". Built from four coloured strokes, exactly like the logo. */
+export function googleLogo() {
+  return canvasTexture('google-g', 256, 256, (ctx) => {
+    ctx.clearRect(0, 0, 256, 256)
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    const stroke = (color: string, width: number) => { ctx.strokeStyle = color; ctx.lineWidth = width }
+    const arc = (cx: number, cy: number, r: number, a0: number, a1: number, color: string, width: number) => { stroke(color, width); ctx.beginPath(); ctx.arc(cx, cy, r, a0, a1); ctx.stroke() }
+    const line = (x0: number, y0: number, x1: number, y1: number, color: string, width: number) => { stroke(color, width); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke() }
+    const BLUE = '#4285F4', RED = '#EA4335', YELLOW = '#FBBC05', GREEN = '#34A853'
+    const cx = 150, cy = 142, R = 72, W = 44
+    // Blue: the top curve (from ~108° to ~288° going clockwise) that becomes the vertical stroke.
+    arc(cx, cy, R, Math.PI * 0.6, 0, BLUE, W)
+    // Red: the right-hand curve.
+    arc(cx, cy, R, 0, Math.PI * 0.78, RED, W)
+    // Yellow: the bottom leg back toward the centre dot.
+    arc(cx, cy, R, Math.PI * 1.32, Math.PI * 1.9, YELLOW, W)
+    // Green: the lower-left stem joining blue.
+    arc(cx, cy, R, Math.PI * 0.78, Math.PI * 1.2, GREEN, W)
+    // Centre dot (the G's crossbar gap) in blue.
+    ctx.fillStyle = BLUE
+    ctx.beginPath(); ctx.arc(cx + 8, cy - 18, 34, 0, Math.PI * 2); ctx.fill()
+    // A clean horizontal baseline so the mark reads as a sign.
+    line(44, 214, 212, 214, '#c9d2da', 10)
   })
 }
 
@@ -153,4 +190,3 @@ export function arcadeScreen() {
     ctx.fillStyle = '#ffffff'; ctx.fillRect(52, 88, 26, 4); ctx.fillRect(70, 64, 4, 4)
   })
 }
-

@@ -3,7 +3,7 @@ import { useMemo, useRef, type ReactNode } from 'react'
 import * as THREE from 'three'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import type { Vec3 } from '../office3d-layout.ts'
-import { arcadeScreen, merahPutih, screenTexture, signTexture } from './textures.ts'
+import { arcadeScreen, googleLogo, merahPutih, screenTexture, signTexture } from './textures.ts'
 
 // Low-poly props built from primitives. Rounded edges and PBR materials keep them from
 // looking flat; everything is procedural, so no model files are shipped.
@@ -58,10 +58,12 @@ export function OfficeChair({ position, rotation = 0, color = '#2f3a44' }: { pos
 export function WorkDesk({ position, active, withChair = true }: { position: Vec3; active: boolean; withChair?: boolean }) {
   const screen = useMemo(() => screenTexture(active), [active])
   return <Group position={position}>
-    <RBox position={[0, 0.74, 0]} size={[1.9, 0.07, 0.95]} radius={0.03} color="#d9c3a0" roughness={0.6}/>
-    <RBox position={[-0.9, 0.37, 0]} size={[0.06, 0.72, 0.85]} radius={0.02} color="#e7e2d8"/>
-    <RBox position={[0.9, 0.37, 0]} size={[0.06, 0.72, 0.85]} radius={0.02} color="#e7e2d8"/>
-    <RBox position={[0.55, 0.52, 0.02]} size={[0.42, 0.4, 0.8]} radius={0.02} color="#e7e2d8"/>
+    {/* White modern sit-stand desk with a Google-blue accent rail */}
+    <RBox position={[0, 0.74, 0]} size={[1.9, 0.07, 0.95]} radius={0.03} color="#f7f8fa" roughness={0.4}/>
+    <RBox position={[0, 0.742, 0.02]} size={[1.92, 0.025, 0.98]} radius={0.015} color="#4285F4"/>
+    <Cyl position={[-0.9, 0.37, 0]} radius={0.05} height={0.7} color="#c9ced4" metalness={0.6}/>
+    <Cyl position={[0.9, 0.37, 0]} radius={0.05} height={0.7} color="#c9ced4" metalness={0.6}/>
+    <RBox position={[0.55, 0.52, 0.02]} size={[0.42, 0.4, 0.8]} radius={0.02} color="#f1f3f6"/>
     {/* Monitor */}
     <RBox position={[0, 1.13, 0.22]} size={[0.86, 0.52, 0.05]} radius={0.02} color="#1c2024" roughness={0.4}/>
     <mesh position={[0, 1.13, 0.194]} rotation={[0, Math.PI, 0]}><planeGeometry args={[0.8, 0.46]}/><meshStandardMaterial map={screen} emissive={active ? '#ffffff' : '#000000'} emissiveMap={screen} emissiveIntensity={active ? 0.9 : 0} roughness={0.3}/></mesh>
@@ -80,8 +82,8 @@ export function WorkDesk({ position, active, withChair = true }: { position: Vec
 export function LongTable({ position, length }: { position: Vec3; length: number }) {
   const places = Math.max(1, Math.floor(length / 0.8))
   return <Group position={position}>
-    <RBox position={[0, 0.74, 0]} size={[length, 0.07, 1.1]} radius={0.03} color="#6e4a30" roughness={0.4}/>
-    {[-length / 2 + 0.35, length / 2 - 0.35].map((x) => <RBox key={x} position={[x, 0.37, 0]} size={[0.12, 0.72, 0.8]} radius={0.02} color="#2a2f33"/>)}
+    <RBox position={[0, 0.74, 0]} size={[length, 0.07, 1.1]} radius={0.03} color="#f7f8fa" roughness={0.4}/>
+    {[-length / 2 + 0.35, length / 2 - 0.35].map((x) => <RBox key={x} position={[x, 0.37, 0]} size={[0.12, 0.72, 0.8]} radius={0.02} color="#c9ced4"/>)}
     <RBox position={[0, 0.08, 0]} size={[length - 0.5, 0.06, 0.12]} radius={0.02} color="#2a2f33"/>
     {Array.from({ length: places }, (_, index) => {
       const x = -length / 2 + 0.4 + index * ((length - 0.8) / Math.max(1, places - 1))
@@ -89,7 +91,7 @@ export function LongTable({ position, length }: { position: Vec3; length: number
       return <group key={index}>
         {index % 3 === 0 ? <><RBox position={[x, 0.79, side * 0.3]} size={[0.34, 0.02, 0.24]} radius={0.01} color="#c9ced3" metalness={0.4}/><RBox position={[x, 0.9, side * 0.42]} rotation={[side * 0.35, 0, 0]} size={[0.34, 0.22, 0.015]} radius={0.01} color="#2a2f33"/></>
           : <RBox position={[x, 0.785, side * 0.32]} size={[0.22, 0.015, 0.3]} radius={0.005} color={index % 3 === 1 ? '#f4f1ea' : '#e9c46a'}/>}
-        <Cyl position={[x + 0.25, 0.83, side * 0.18]} radius={0.04} height={0.1} color={index % 2 ? '#ffffff' : '#c62828'}/>
+        <Cyl position={[x + 0.25, 0.83, side * 0.18]} radius={0.04} height={0.1} color={['#4285F4', '#EA4335', '#FBBC05', '#34A853'][index % 4]}/>
       </group>
     })}
   </Group>
@@ -114,14 +116,14 @@ export function Whiteboard({ position, rotation = 0 }: { position: Vec3; rotatio
   </Group>
 }
 
-export function Sofa({ position, rotation = 0, color = '#5b6f8c' }: { position: Vec3; rotation?: number; color?: string }) {
+export function Sofa({ position, rotation = 0, color = '#4285F4' }: { position: Vec3; rotation?: number; color?: string }) {
   return <Group position={position} rotation={rotation}>
     <RBox position={[0, 0.28, 0]} size={[2.4, 0.36, 0.9]} radius={0.1} color={color} roughness={0.95}/>
     <RBox position={[0, 0.66, -0.36]} size={[2.4, 0.62, 0.2]} radius={0.1} color={color} roughness={0.95}/>
     <RBox position={[-1.12, 0.52, 0]} size={[0.2, 0.42, 0.9]} radius={0.08} color={color} roughness={0.95}/>
     <RBox position={[1.12, 0.52, 0]} size={[0.2, 0.42, 0.9]} radius={0.08} color={color} roughness={0.95}/>
-    {[-0.5, 0.5].map((x) => <RBox key={x} position={[x, 0.5, 0.05]} size={[0.95, 0.14, 0.7]} radius={0.07} color="#6e83a2" roughness={0.95}/>)}
-    <RBox position={[-0.7, 0.72, -0.18]} size={[0.38, 0.34, 0.14]} radius={0.07} color="#e0a43a" roughness={0.95}/>
+    {[-0.5, 0.5].map((x) => <RBox key={x} position={[x, 0.5, 0.05]} size={[0.95, 0.14, 0.7]} radius={0.07} color="#5c93ff" roughness={0.95}/>)}
+    <RBox position={[-0.7, 0.72, -0.18]} size={[0.38, 0.34, 0.14]} radius={0.07} color="#FBBC05" roughness={0.95}/>
   </Group>
 }
 
@@ -134,9 +136,9 @@ export function Armchair({ position, rotation = 0, color }: { position: Vec3; ro
 
 export function CoffeeTable({ position }: { position: Vec3 }) {
   return <Group position={position}>
-    <RBox position={[0, 0.36, 0]} size={[1.3, 0.07, 0.7]} radius={0.03} color="#8a5a3a" roughness={0.5}/>
-    {[[-0.55, -0.27], [0.55, -0.27], [-0.55, 0.27], [0.55, 0.27]].map(([x, z]) => <Cyl key={`${x}${z}`} position={[x, 0.17, z]} radius={0.03} height={0.34} color="#2a2f33"/>)}
-    {/* Teh botol and a toples of kerupuk */}
+    <RBox position={[0, 0.36, 0]} size={[1.3, 0.08, 0.7]} radius={0.04} color="#f7f8fa" roughness={0.4}/>
+    {[[-0.55, -0.27], [0.55, -0.27], [-0.55, 0.27], [0.55, 0.27]].map(([x, z]) => <Cyl key={`${x}${z}`} position={[x, 0.17, z]} radius={0.03} height={0.34} color="#c9ced4" metalness={0.6}/>)}
+    {/* Teh botol and a jar of snacks */}
     <Cyl position={[-0.3, 0.48, 0.05]} radius={0.04} height={0.18} color="#3a1f12" opacity={0.85}/>
     <Cyl position={[0.25, 0.49, 0]} radius={0.12} height={0.2} color="#dfe8e6" opacity={0.55} roughness={0.1}/>
     <Cyl position={[0.25, 0.47, 0]} radius={0.1} height={0.14} color="#f1d9a6"/>
@@ -170,6 +172,16 @@ export function WallClock({ position }: { position: Vec3 }) {
     <Cyl position={[0, 0, 0]} radius={0.3} height={0.05} rotation={[Math.PI / 2, 0, 0]} color="#f4efe6" segments={28}/>
     <RBox position={[0, 0.07, 0.035]} size={[0.03, 0.18, 0.01]} radius={0.004} color="#1c2024"/>
     <RBox position={[0.06, 0, 0.035]} size={[0.14, 0.025, 0.01]} radius={0.004} color="#1c2024"/>
+  </Group>
+}
+
+/** A small standing sign carrying the multicoloured Google "G" — brand identity at the entrance. */
+export function GooglePlaque({ position, rotation = 0 }: { position: Vec3; rotation?: number }) {
+  const logo = useMemo(() => googleLogo(), [])
+  return <Group position={position} rotation={rotation}>
+    <RBox position={[0, 0.25, 0]} size={[0.5, 0.5, 0.14]} radius={0.05} color="#ffffff" roughness={0.4}/>
+    {/* The face bearing the logo */}
+    <mesh position={[0, 0.25, 0.072]}><planeGeometry args={[0.42, 0.42]}/><meshStandardMaterial map={logo} roughness={0.4}/></mesh>
   </Group>
 }
 
@@ -476,12 +488,12 @@ export function CarromTable({ position }: { position: Vec3 }) {
 // ---------------------------------------------------------------------------
 // Lantai 2: bedroom, lesehan corner, bathroom and balcony
 
-/** Single bed, head (pillow) towards -z. */
-export function Bed({ position, color = '#3d7fd6' }: { position: Vec3; color?: string }) {
+/** Modern single bed, head (pillow) towards -z, white frame with a Google-colour blanket. */
+export function Bed({ position, color = '#4285F4' }: { position: Vec3; color?: string }) {
   return <Group position={position}>
-    <RBox position={[0, 0.2, 0]} size={[1.05, 0.26, 2.05]} radius={0.04} color="#7a5232" roughness={0.6}/>
-    <RBox position={[0, 0.4, 0.02]} size={[0.98, 0.16, 1.96]} radius={0.06} color="#f3f1ec" roughness={0.95}/>
-    <RBox position={[0, 0.62, -1.0]} size={[1.05, 0.7, 0.08]} radius={0.03} color="#6b4a32"/>
+    <RBox position={[0, 0.2, 0]} size={[1.05, 0.26, 2.05]} radius={0.04} color="#9aa5ad" roughness={0.4}/>
+    <RBox position={[0, 0.4, 0.02]} size={[0.98, 0.16, 1.96]} radius={0.06} color="#f6f7f9" roughness={0.95}/>
+    <RBox position={[0, 0.62, -1.0]} size={[1.05, 0.66, 0.08]} radius={0.03} color="#8d99a1"/>
     <RBox position={[0, 0.53, -0.72]} size={[0.62, 0.11, 0.34]} radius={0.05} color="#ffffff" roughness={0.95}/>
     {/* Blanket over the lower part of the bed */}
     <RBox position={[0, 0.5, 0.4]} size={[1.0, 0.06, 1.1]} radius={0.03} color={color} roughness={0.95}/>
@@ -594,9 +606,9 @@ export function Staircase({ position, run, rise, width }: { position: Vec3; run:
   const tread = Math.abs(run) / steps
   const direction = Math.sign(run)
   return <Group position={position}>
-    {Array.from({ length: steps }, (_, index) => <RBox key={index} position={[direction * (index + 0.5) * tread, (index + 1) * (rise / steps) - 0.03, 0]} size={[tread + 0.04, 0.06, width]} radius={0.01} color="#8a5a3a" roughness={0.6}/>)}
+    {Array.from({ length: steps }, (_, index) => <RBox key={index} position={[direction * (index + 0.5) * tread, (index + 1) * (rise / steps) - 0.03, 0]} size={[tread + 0.04, 0.06, width]} radius={0.01} color="#c9ced4" roughness={0.5}/>)}
     {/* Stringer and handrail on the open side */}
-    <RBox position={[run / 2, rise / 2 - 0.1, -width / 2]} rotation={[0, 0, -direction * Math.atan2(rise, Math.abs(run))]} size={[Math.hypot(run, rise), 0.16, 0.06]} radius={0.02} color="#5a3a24"/>
+    <RBox position={[run / 2, rise / 2 - 0.1, -width / 2]} rotation={[0, 0, -direction * Math.atan2(rise, Math.abs(run))]} size={[Math.hypot(run, rise), 0.16, 0.06]} radius={0.02} color="#8d99a1"/>
     <RBox position={[run / 2, rise / 2 + 0.85, -width / 2]} rotation={[0, 0, -direction * Math.atan2(rise, Math.abs(run))]} size={[Math.hypot(run, rise), 0.05, 0.05]} radius={0.02} color="#3a3f44" metalness={0.5}/>
     {[0.25, 0.5, 0.75].map((t) => <RBox key={t} position={[run * t, rise * t + 0.42, -width / 2]} size={[0.04, 0.85, 0.04]} radius={0.01} color="#3a3f44" metalness={0.5}/>)}
   </Group>
